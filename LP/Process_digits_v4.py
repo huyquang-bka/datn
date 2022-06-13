@@ -5,6 +5,9 @@ from PyQt5 import QtCore
 import os
 import cv2
 import numpy as np
+from color_brand.classify import Classifier
+from detect_yolov5 import Detection
+from LP.utils import check
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
@@ -29,6 +32,8 @@ class ProcessDigitThread(QtCore.QThread):
         self.conf_threshold = 0.5
         self.nms_threshold = 0.4
         self.queue_lp_process = queue_lp_process
+        self.classifier_color = Classifier("color_brand/color.mnn", "color_brand/labels-color.txt")
+        self.detection = Detection()
 
     def get_classes(self):
         with open(self.class_path, 'r') as f:
@@ -63,25 +68,33 @@ class ProcessDigitThread(QtCore.QThread):
 
     def run(self):
         self.__thread_active = True
+        weight_path = r"weights/brand.pt"
+        classes = None
+        conf = 0.5
+        imgsz = 640
+        device = "0"
+        self.detection.setup_model(weight_path, classes, conf, imgsz, device)
         print('Starting Digits Thread...')
         count = 0
         lp_list = []
+        color_list = []
+        brand_list = []
         count_missing_lp = 0
         while self.__thread_active:
             if self.queue_lp_process.qsize() < 1:
                 count_missing_lp += 1
                 if count_missing_lp > 25:
                     count_missing_lp = 0
-                    if not lp_list:
-                        continue
-                    lp_most_dict = {}
-                    print("lp_list: ", lp_list)
-                    lp_set = set(lp_list)
-                    for lp in lp_set:
-                        lp_most_dict[lp_list.count(lp)] = lp
-                    lp_final = lp_most_dict[max(lp_most_dict.keys())]
-                    print(lp_final)
+                    lp_final = check(lp_list)
+                    color_final = check(color_list)
+                    brand_final = check(brand_list)
+                    if lp_final:
+                        print("LP: ", lp_final)
+                        print("Color: ", color_final)
+                        print("Brand: ", brand_final)
                     lp_list = []
+                    brand_list = []
+                    color_list = []
                 time.sleep(0.001)
                 continue
             lp_dict = self.queue_lp_process.get()
@@ -92,6 +105,17 @@ class ProcessDigitThread(QtCore.QThread):
                     continue
                 x1, y1, x2, y2, x1_crop, y1_crop, x2_crop, y2_crop = lp_dict[key]
                 car_crop = img[y1:y2, x1:x2]
+
+                # Color
+                color, color_conf = self.classifier_color.predict(car_crop)
+                color_list.append(color)
+
+                # Brand
+                brands_detection = self.detection.detect(car_crop)
+                if brands_detection:
+                    _, _, _, _, brand = brands_detection[0]
+                    brand_list.append(brand)
+
                 image = car_crop[y1_crop:y2_crop, x1_crop:x2_crop]
                 Width = image.shape[1]
                 Height = image.shape[0]
@@ -146,7 +170,7 @@ class ProcessDigitThread(QtCore.QThread):
                 if len(lp_text) < 7:
                     lp_text = ""
                 lp_list.append(lp_text)
-                cv2.imshow("image", cv2.resize(image, dsize=None, fx=5, fy=5))
+                cv2.imshow("image", car_crop)
                 cv2.waitKey(1)
 
     def stop(self):

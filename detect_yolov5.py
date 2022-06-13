@@ -192,7 +192,7 @@ class Detection():
 
                     for x1, y1, x2, y2, conf, cls in det.cpu().numpy():
                         x1, x2, y1, y2 = list(map(relu, [x1, x2, y1, y2]))
-                        detect_list.append([x1, y1, x2, y2, cls])
+                        detect_list.append([x1, y1, x2, y2, self.names[int(cls)]])
             return detect_list
 
 
