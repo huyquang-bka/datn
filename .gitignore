@@ -2,5 +2,4 @@
 __pycache__
 .DS_Store
 venv
-veh01.mp4
-test_video.mp4
+*.mp4

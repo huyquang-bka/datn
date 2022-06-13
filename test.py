@@ -1,22 +1,7 @@
-from typing import final
-
-
-class Person():
-    def __init__(self):
-        self.a = "1"
-        
-class Person2():
-    def __init__(self):
-        self.b = "2"
-        
-class Person3():
-    def __init__(self):
-        self.c = "3"
-        
-class Final(Person, Person2, Person3):
-    def __init__(self):
-        super().__init__()
-        
-
-final = Final()
-print(final.a, final.b, final.c)
+lp_list = ["123", "123", "456"]
+lp_most_dict = {}
+lp_set = set(lp_list)
+for lp in lp_set:
+    lp_most_dict[lp_list.count(lp)] = lp
+lp_final = lp_most_dict[max(lp_most_dict.keys())]
+print(lp_final)

@@ -23,6 +23,7 @@ from D3_Camera import D3_Camera_Item
 from D5_Camera import D5_Camera_Item
 from LP_Camera import LP_Camera_Item
 
+
 class Ui_MainWindow(QMainWindow):
 
     def __init__(self):
@@ -31,7 +32,7 @@ class Ui_MainWindow(QMainWindow):
         self.setupUi()
         self.camera_items_dict = {1: D5_Camera_Item(), 2: D3_Camera_Item(), 3: LP_Camera_Item()}
         self.grid_layout_cameras_dict = {}
-        for k in range(1, 4):
+        for k in range(3, 4):
             self.grid_layout_cameras_dict[k] = QtWidgets.QGridLayout()
             self.grid_layout_cameras_dict[k].setContentsMargins(0, 0, 0, 0)
             self.grid_layout_cameras_dict[k].addWidget(self.camera_items_dict[k], 0, 0, 1, 1)
@@ -68,7 +69,6 @@ class Ui_MainWindow(QMainWindow):
         self.layout_main.addWidget(self.frame_camera_dict[2], 0, 2, 1, 1)
         self.layout_main.addWidget(self.frame_camera_dict[3], 1, 2, 1, 1)
         self.layout_main.addWidget(self.frame_camera_dict[4], 1, 1, 1, 1)
-
 
         self.menu = QtWidgets.QLabel(self.centralwidget)
         self.menu.setMinimumSize(QtCore.QSize(128, 0))

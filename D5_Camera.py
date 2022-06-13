@@ -24,7 +24,7 @@ class D5_Camera_Item(QtWidgets.QWidget):
 
     def __init__(self):
         super().__init__()
-        self.rtsp_url = "test_video.mp4"
+        self.rtsp_url = r"D:\Cam_D35\2022-05-18\D5_part_3.mp4"
         self.camera_name = "D5_Camera"
         
         self.capture_queue = Queue()

@@ -17,6 +17,9 @@ import numpy as np
 from queue import Queue
 from Process_Capture import ProcessCaptureThread
 from LP.Process_LP import ProcessLPThread
+from LP.Process_LP_LP import ProcessLP_LPThread
+from LP.Process_digits_v4 import ProcessDigitThread
+
 
 class LP_Camera_Item(QtWidgets.QWidget):
     sig_new_cam_inf = pyqtSignal(int, str, int, bool)
@@ -24,22 +27,28 @@ class LP_Camera_Item(QtWidgets.QWidget):
 
     def __init__(self):
         super().__init__()
-        self.rtsp_url = "test_video.mp4"
+        self.rtsp_url = r"D:\Lab IC\Data_9_3\Final_LP.mp4"
         self.camera_name = "LP_Camera"
-        
-        self.capture_queue = Queue()
-        self.output_queue = Queue()
-        
-        self.process_capture = ProcessCaptureThread(self.capture_queue, self.rtsp_url, self.camera_name)
-        self.process_LP = ProcessLPThread(self.capture_queue, self.output_queue)
-        
+
+        self.queue_capture = Queue()
+        self.queue_tracking = Queue()
+        self.queue_output = Queue()
+        self.queue_lp_processing = Queue()
+
+        self.process_capture = ProcessCaptureThread(self.queue_capture, self.rtsp_url, self.camera_name)
+        self.process_LP = ProcessLPThread(self.queue_capture, self.queue_tracking)
+        self.process_lp_lp = ProcessLP_LPThread(self.queue_tracking, self.queue_output, self.queue_lp_processing)
+        self.process_digit = ProcessDigitThread(self.queue_lp_processing)
+
         self.setupUi()
         self.camera_frame.setSizePolicy(QtWidgets.QSizePolicy.Policy.Ignored, QtWidgets.QSizePolicy.Policy.Ignored)
 
     def start(self):
         self.process_capture.start()
         self.process_LP.start()
-        
+        self.process_lp_lp.start()
+        self.process_digit.start()
+
     def setupUi(self):
         self.setObjectName("form_camera")
         self.resize(245, 108)
@@ -63,8 +72,8 @@ class LP_Camera_Item(QtWidgets.QWidget):
 
     def paintEvent(self, event):
         current_frame = None
-        if self.output_queue.qsize() > 0:
-            current_frame = self.output_queue.get()
+        if self.queue_output.qsize() > 0:
+            current_frame = self.queue_output.get()
         if current_frame is not None:
             self.old_frame = current_frame
             rgb_img = cv2.cvtColor(current_frame, cv2.COLOR_BGR2RGB)
@@ -85,6 +94,6 @@ if __name__ == "__main__":
     import sys
 
     app = QtWidgets.QApplication(sys.argv)
-    ui = Widget_Camera_Item()
+    ui = LP_Camera_Item()
     ui.show()
     sys.exit(app.exec_())
