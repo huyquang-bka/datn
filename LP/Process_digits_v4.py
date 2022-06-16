@@ -174,8 +174,8 @@ class ProcessDigitThread(QtCore.QThread):
                 for bbox in bboxes:
                     x, y, w, h, confidence, class_id = bbox
                     lp_text += self.classes[class_id]
-                lp_text = lp_text.upper()
-                if not lp_text:
+                lp_text = lp_text.upper().strip()
+                if (not lp_text) or lp_text[2].isdigit():
                     continue
                 lp_list.append(lp_text)
                 # cv2.imshow("image", car_crop)
