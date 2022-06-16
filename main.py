@@ -1,11 +1,9 @@
-from main_window import Ui_MainWindow
+from widget_layout.main_window import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication
 import sys
 from PyQt5.QtCore import pyqtSignal
-from map_2d import Ui_map2D
-from layout_search import Ui_Layout_Search
-from PyQt5.QtGui import QBrush, QColor, QImage, QPainter, QPen
-from PyQt5.QtCore import Qt
+from widget_layout.map_2d import Ui_map2D
+from widget_layout.layout_search import Ui_Layout_Search
 
 
 class MainWindow(Ui_MainWindow):
@@ -18,26 +16,15 @@ class MainWindow(Ui_MainWindow):
         self.map_2d = Ui_map2D()
         self.layout_search = Ui_Layout_Search()
 
-        # Button Main Window
         self.btn_view_2d_map.clicked.connect(self.slot_view_2d_map)
         self.btn_search.clicked.connect(self.slot_search)
 
-        # Button Map 2D
-
-        # Button Layout Search
         self.layout_search.btn_apply.clicked.connect(self.slot_apply)
         self.layout_search.btn_cancel.clicked.connect(self.slot_cancel)
 
-        # self.W, self.H = self.img4.width() * 2, self.img4.height() * 2
+        self.camera_items_dict[3].process_digit.sig_car_info.connect(self.slot_car_info_from_lp)
 
         self.show()
-    #
-    # def paintEvent(self, event):
-    #     painter = QPainter(self)
-    #     painter.setPen(QPen(Qt.red, 4, Qt.SolidLine))
-    #
-    #     painter.drawLine(0, self.H // 2 + 2, self.W, self.H // 2 + 2)
-    #     painter.drawLine(self.W // 2 + 2, 0, self.W // 2 + 2, self.H)
 
     def slot_apply(self):
         plate = self.layout_search.txt_plate.text()
@@ -57,6 +44,9 @@ class MainWindow(Ui_MainWindow):
         self.layout_search.hide()
         self.layout_search.move(200, 300)
         self.layout_search.show()
+
+    def slot_car_info_from_lp(self, car_info):
+        print(car_info)
 
 
 if __name__ == "__main__":

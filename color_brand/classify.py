@@ -40,4 +40,4 @@ class Classifier():
         top = 1
         top_indices = np.array(preds).argsort()[-top:][::-1]
         ix = top_indices[0]
-        return (self.labels[ix], str(float(np.array(preds)[ix])))
+        return self.labels[ix], float(np.array(preds)[ix])

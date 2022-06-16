@@ -1,4 +1,3 @@
-import random
 import time
 # QT
 from PyQt5 import QtCore
@@ -6,7 +5,7 @@ import os
 import cv2
 import numpy as np
 from color_brand.classify import Classifier
-from detect_yolov5 import Detection
+from utils_huy_quang.detect_yolov5 import Detection
 from LP.utils import check
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
@@ -19,7 +18,9 @@ os.environ["NUMEXPR_NUM_THREADS"] = "1"
 
 
 class ProcessDigitThread(QtCore.QThread):
-    def __init__(self, queue_lp_process):
+    sig_car_info = QtCore.pyqtSignal(dict)
+
+    def __init__(self, queue_lp_process, queue_digit):
         super().__init__()
 
         self.weight_path = "YOLO_v4_file/lp.weights"
@@ -29,11 +30,14 @@ class ProcessDigitThread(QtCore.QThread):
         self.classes = self.get_classes()
         self.scale = 1 / 255.
         self.size = (224, 224)
-        self.conf_threshold = 0.5
+        self.conf_threshold = 0.3
         self.nms_threshold = 0.4
-        self.queue_lp_process = queue_lp_process
         self.classifier_color = Classifier("color_brand/color.mnn", "color_brand/labels-color.txt")
         self.detection = Detection()
+
+        # queue
+        self.queue_lp_process = queue_lp_process
+        self.queue_digit = queue_digit
 
     def get_classes(self):
         with open(self.class_path, 'r') as f:
@@ -70,7 +74,7 @@ class ProcessDigitThread(QtCore.QThread):
         self.__thread_active = True
         weight_path = r"weights/brand.pt"
         classes = None
-        conf = 0.5
+        conf = 0.2
         imgsz = 640
         device = "0"
         self.detection.setup_model(weight_path, classes, conf, imgsz, device)
@@ -88,10 +92,13 @@ class ProcessDigitThread(QtCore.QThread):
                     lp_final = check(lp_list)
                     color_final = check(color_list)
                     brand_final = check(brand_list)
-                    if lp_final:
-                        print("LP: ", lp_final)
-                        print("Color: ", color_final)
-                        print("Brand: ", brand_final)
+                    if brand_final:
+                        brand_final = brand_final.split("____")[1]
+                    if lp_final or brand_final or color_final:
+                        return_dict = {'lp': lp_final, 'color': color_final, 'brand': brand_final}
+                        if self.queue_digit.qsize() < 1:
+                            self.queue_digit.put(return_dict)
+                        self.sig_car_info.emit(return_dict)
                     lp_list = []
                     brand_list = []
                     color_list = []
@@ -108,7 +115,8 @@ class ProcessDigitThread(QtCore.QThread):
 
                 # Color
                 color, color_conf = self.classifier_color.predict(car_crop)
-                color_list.append(color)
+                if color_conf > 0.3:
+                    color_list.append(color)
 
                 # Brand
                 brands_detection = self.detection.detect(car_crop)
@@ -168,10 +176,10 @@ class ProcessDigitThread(QtCore.QThread):
                     lp_text += self.classes[class_id]
                 lp_text = lp_text.upper()
                 if len(lp_text) < 7:
-                    lp_text = ""
+                    continue
                 lp_list.append(lp_text)
-                cv2.imshow("image", car_crop)
-                cv2.waitKey(1)
+                # cv2.imshow("image", car_crop)
+                # cv2.waitKey(1)
 
     def stop(self):
         print('Stopping Processing Thread')
