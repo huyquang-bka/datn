@@ -14,7 +14,7 @@ os.environ["NUMEXPR_NUM_THREADS"] = "1"
 
 import sys
 
-sys.path.insert(0, './yolov5')
+sys.path.insert(0, './')
 import os
 from pathlib import Path
 import torch
@@ -56,6 +56,7 @@ class Tracking():
         self.save_dir = None
         self.save_txt = False
         self.name = None
+        
         self.sort_tracker = Sort(max_age=150, min_hits=5, iou_threshold=0.3)
 
     def setup_model(self, a_model, classes, conf_thres, img_size, device):
@@ -124,22 +125,16 @@ class Tracking():
 class Detection():
     def __init__(self):
         self.model_file = 'lp_final.pt'
-        self.data = 'yolov5/data/coco128.yaml'  # dataset.yaml path
+        # self.data = 'yolov5/data/coco128.yaml'  # dataset.yaml path
         self.imgsz = 640  # inference size (height, width)
         self.conf_thres = 0.5  # confidence threshold
         self.iou_thres = 0.45  # NMS IOU threshold
         self.max_det = 10  # maximum detections per image
         self.device = "0"  # cuda device, i.e. 0 or 0,1,2,3 or cpu
-        self.save_crop = False  # save cropped prediction boxes
         self.classes = [0, 1]  # filter by class: --class 0, or --class 0 2 3
         self.agnostic_nms = False  # class-agnostic NMS
-        self.line_thickness = 1  # bounding box thickness (pixels)
-        self.hide_labels = False  # hide labels
-        self.hide_conf = False  # hide confidences
-        self.half = False  # use FP16 half-precision inference
+        self.half = True  # use FP16 half-precision inference
         self.dnn = False  # use OpenCV DNN for ONNX inference
-        self.save_dir = None
-        self.save_txt = False
         self.name = None
 
     def setup_model(self, a_model, classes, conf_thres, img_size, device):
@@ -196,14 +191,14 @@ class Detection():
 
 
 if __name__ == '__main__':
-    tracking = Detection()
-    weight_path = r"D:/datn_huy_quang/weights/yolov5s.pt"
+    tracking = Tracking()
+    weight_path = r"weights/yolov5s.pt"
     classes = [2, 7]
     conf = 0.3
     imgsz = 640
-    device = "0"
+    device = "cpu"
     tracking.setup_model(weight_path, classes, conf, imgsz, device)
-    cap = cv2.VideoCapture(r"D:/datn_huy_quang/test_video.mp4")
+    cap = cv2.VideoCapture(r"C:\Users\ntdki\Downloads\D35_demo_final_2 (3).mp4")
     t = time.time()
     count = 0
     fps = 0
@@ -217,12 +212,13 @@ if __name__ == '__main__':
             break
         count += 1
         id_dict = tracking.detect(frame)
-        for id in range(len(id_dict)):
+        for id in id_dict:
             x1, y1, x2, y2, category = id_dict[id]
             x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
             cv2.putText(frame, str(id), (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
         cv2.putText(frame, "FPS: " + str(fps), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        frame = cv2.resize(frame, (640, 480))
         cv2.imshow("frame", frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

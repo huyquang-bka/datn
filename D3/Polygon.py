@@ -2,7 +2,7 @@ import numpy as np
 
 detect_zone = []
 
-with open('../D3/detect_zone.txt', 'r') as f:
+with open('D3/detect_zone.txt', 'r') as f:
     for line in f.readlines():
         if not line.strip():
             continue
@@ -17,7 +17,7 @@ detect_zone = detect_zone.reshape((-1, 1, 2))
 polygon_dict_d3 = {}
 point_dict_d3 = {}
 
-with open("../spot_file/d3_polygon.txt", "r") as f:
+with open("spot_file/d3_polygon.txt", "r") as f:
     count = 0
     points = []
     for line in f.readlines():
@@ -29,7 +29,7 @@ with open("../spot_file/d3_polygon.txt", "r") as f:
             polygon_dict_d3[int(count / 4)] = points
             points = []
 
-with open("../spot_file/d3.txt", "r") as f:
+with open("spot_file/d3.txt", "r") as f:
     count = 0
     points = []
     for index, line in enumerate(f.readlines()):

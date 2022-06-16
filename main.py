@@ -1,9 +1,12 @@
+import cv2
 from widget_layout.main_window import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication
 import sys
 from PyQt5.QtCore import pyqtSignal
 from widget_layout.map_2d import Ui_map2D
-from widget_layout.layout_search import Ui_Layout_Search
+from widget_layout.layout_search_2 import Ui_Layout_Search
+from Database.utils import get_info
+from PyQt5.QtGui import QPixmap
 
 
 class MainWindow(Ui_MainWindow):
@@ -30,7 +33,12 @@ class MainWindow(Ui_MainWindow):
         plate = self.layout_search.txt_plate.text()
         brand = self.layout_search.txt_brand.text()
         color = self.layout_search.txt_color.text()
-        print(plate, brand, color)
+        result_dict = get_info({'plate': plate, 'brand': brand, 'color': color})
+        print(result_dict)  
+        if result_dict:
+            img_path = result_dict[list(result_dict.keys())[0]]['img_path']
+            img = cv2.imread(img_path)
+            self.show_frame(self.layout_search.qlabel_crop_frame, img)  
 
     def slot_cancel(self):
         self.layout_search.hide()
