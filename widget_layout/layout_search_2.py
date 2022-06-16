@@ -9,11 +9,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from utils_huy_quang.get_search_info import *
 
+
 class Ui_Layout_Search(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.setupUi()
-    
+
     def setupUi(self):
         self.setObjectName("Seach")
         self.resize(540, 293)
@@ -29,8 +30,8 @@ class Ui_Layout_Search(QtWidgets.QWidget):
         self.groupBox.setObjectName("groupBox")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.groupBox)
         self.gridLayout_2.setObjectName("gridLayout_2")
-        
-        # txt_plate
+
+        # plate
         self.qlabel_plate = QtWidgets.QLabel(self.groupBox)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -39,7 +40,7 @@ class Ui_Layout_Search(QtWidgets.QWidget):
         self.qlabel_plate.setSizePolicy(sizePolicy)
         self.qlabel_plate.setObjectName("qlabel_plate")
         self.gridLayout_2.addWidget(self.qlabel_plate, 0, 0, 1, 1)
-        
+
         # txt_plate
         self.txt_plate = QtWidgets.QLineEdit(self.groupBox)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
@@ -49,7 +50,7 @@ class Ui_Layout_Search(QtWidgets.QWidget):
         self.txt_plate.setSizePolicy(sizePolicy)
         self.txt_plate.setObjectName("txt_plate")
         self.gridLayout_2.addWidget(self.txt_plate, 0, 1, 1, 1)
-        
+
         # brand
         self.qlabel_brand = QtWidgets.QLabel(self.groupBox)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
@@ -59,12 +60,12 @@ class Ui_Layout_Search(QtWidgets.QWidget):
         self.qlabel_brand.setSizePolicy(sizePolicy)
         self.qlabel_brand.setObjectName("qlabel_brand")
         self.gridLayout_2.addWidget(self.qlabel_brand, 1, 0, 1, 1)
-        
+
         # txt_brand
         self.txt_brand = QtWidgets.QLineEdit(self.groupBox)
-        completer_brand = QtWidgets.QCompleter(brands, self)
-        completer_brand.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
-        self.txt_brand.setCompleter(completer_brand)
+        # completer_brand = QtWidgets.QCompleter(brands, self)
+        # completer_brand.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
+        # self.txt_brand.setCompleter(completer_brand)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -72,7 +73,7 @@ class Ui_Layout_Search(QtWidgets.QWidget):
         self.txt_brand.setSizePolicy(sizePolicy)
         self.txt_brand.setObjectName("txt_brand")
         self.gridLayout_2.addWidget(self.txt_brand, 1, 1, 1, 1)
-        
+
         # color
         self.qlabel_color = QtWidgets.QLabel(self.groupBox)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
@@ -82,12 +83,12 @@ class Ui_Layout_Search(QtWidgets.QWidget):
         self.qlabel_color.setSizePolicy(sizePolicy)
         self.qlabel_color.setObjectName("qlabel_color")
         self.gridLayout_2.addWidget(self.qlabel_color, 2, 0, 1, 1)
-        
+
         # color
         self.txt_color = QtWidgets.QLineEdit(self.groupBox)
-        completer_color = QtWidgets.QCompleter(colors, self)
-        completer_color.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
-        self.txt_color.setCompleter(completer_color)
+        # completer_color = QtWidgets.QCompleter(colors, self)
+        # completer_color.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
+        # self.txt_color.setCompleter(completer_color)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -134,8 +135,8 @@ class Ui_Layout_Search(QtWidgets.QWidget):
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     ui = Ui_Layout_Search()
     ui.show()
     sys.exit(app.exec_())
-

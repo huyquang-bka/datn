@@ -5,8 +5,9 @@ import sys
 from PyQt5.QtCore import pyqtSignal
 from widget_layout.map_2d import Ui_map2D
 from widget_layout.layout_search_2 import Ui_Layout_Search
-from Database.utils import get_info
-from PyQt5.QtGui import QPixmap
+from Database.utils import Database
+from PyQt5 import QtWidgets
+from PyQt5 import QtCore
 
 
 class MainWindow(Ui_MainWindow):
@@ -27,18 +28,20 @@ class MainWindow(Ui_MainWindow):
 
         self.camera_items_dict[3].process_digit.sig_car_info.connect(self.slot_car_info_from_lp)
 
+        self.database = Database()
+
         self.show()
 
     def slot_apply(self):
         plate = self.layout_search.txt_plate.text()
         brand = self.layout_search.txt_brand.text()
         color = self.layout_search.txt_color.text()
-        result_dict = get_info({'plate': plate, 'brand': brand, 'color': color})
-        print(result_dict)  
+        result_dict = self.database.get_info({'plate': plate, 'brand': brand, 'color': color})
+
         if result_dict:
             img_path = result_dict[list(result_dict.keys())[0]]['img_path']
             img = cv2.imread(img_path)
-            self.show_frame(self.layout_search.qlabel_crop_frame, img)  
+            self.show_frame(self.layout_search.qlabel_crop_frame, img)
 
     def slot_cancel(self):
         self.layout_search.hide()
@@ -49,6 +52,22 @@ class MainWindow(Ui_MainWindow):
         self.map_2d.show()
 
     def slot_search(self):
+        plates = self.database.get_plate_list()
+        colors = self.database.get_color_list()
+        brands = self.database.get_brand_list()
+        print(plates, colors, brands)
+
+        completer_plate = QtWidgets.QCompleter(plates, self)
+        completer_plate.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
+        completer_color = QtWidgets.QCompleter(colors, self)
+        completer_color.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
+        completer_brand = QtWidgets.QCompleter(brands, self)
+        completer_brand.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
+
+        self.layout_search.txt_plate.setCompleter(completer_plate)
+        self.layout_search.txt_color.setCompleter(completer_color)
+        self.layout_search.txt_brand.setCompleter(completer_brand)
+
         self.layout_search.hide()
         self.layout_search.move(200, 300)
         self.layout_search.show()

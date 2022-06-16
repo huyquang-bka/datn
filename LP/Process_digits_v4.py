@@ -87,7 +87,7 @@ class ProcessDigitThread(QtCore.QThread):
         while self.__thread_active:
             if self.queue_lp_process.qsize() < 1:
                 count_missing_lp += 1
-                if count_missing_lp > 25:
+                if count_missing_lp > 30:
                     count_missing_lp = 0
                     lp_final = check(lp_list)
                     color_final = check(color_list)
@@ -175,7 +175,7 @@ class ProcessDigitThread(QtCore.QThread):
                     x, y, w, h, confidence, class_id = bbox
                     lp_text += self.classes[class_id]
                 lp_text = lp_text.upper()
-                if len(lp_text) < 7:
+                if not lp_text:
                     continue
                 lp_list.append(lp_text)
                 # cv2.imshow("image", car_crop)
