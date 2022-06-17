@@ -4,7 +4,8 @@ from PyQt5.QtWidgets import QApplication
 import sys
 from PyQt5.QtCore import pyqtSignal
 from widget_layout.map_2d import Ui_map2D
-from widget_layout.layout_search_2 import Ui_Layout_Search
+from widget_layout.layout_search_3 import Ui_Layout_Search
+from widget_layout.layout_info_car import Ui_Info_Car
 from Database.utils import Database
 from PyQt5 import QtWidgets
 from PyQt5 import QtCore
@@ -29,19 +30,47 @@ class MainWindow(Ui_MainWindow):
         self.camera_items_dict[3].process_digit.sig_car_info.connect(self.slot_car_info_from_lp)
 
         self.database = Database()
+        
+        self.widget_list = []
 
         self.show()
 
     def slot_apply(self):
+        for widget in self.widget_list:
+            self.layout_search.scrollAreaWidgetContents.layout().removeWidget(widget)
         plate = self.layout_search.txt_plate.text()
         brand = self.layout_search.txt_brand.text()
         color = self.layout_search.txt_color.text()
         result_dict = self.database.get_info({'plate': plate, 'brand': brand, 'color': color})
-
         if result_dict:
-            img_path = result_dict[list(result_dict.keys())[0]]['img_path']
-            img = cv2.imread(img_path)
-            self.show_frame(self.layout_search.qlabel_crop_frame, img)
+            count = 0
+            self.widget_list = []
+            for k, result in result_dict.items():
+                count += 1
+                plate_ = result['plate']
+                color_ = result['color']
+                brand_ = result['brand']
+                in_time = result['in_time']
+                out_time = result['out_time']
+                img_path_ = result['img_path']
+                
+                self.ui_info_car = Ui_Info_Car()
+                self.ui_info_car.qlabel_plate.setText(plate_)
+                self.ui_info_car.qlabel_color.setText(color_)
+                self.ui_info_car.qlabel_brand.setText(brand_)
+                self.ui_info_car.qlabel_in_time.setText(in_time)
+                self.ui_info_car.qlabel_out_time.setText(out_time)
+                
+                img_path = img_path_
+                img = cv2.imread(img_path)
+                self.show_frame(self.ui_info_car.qlabel_frame, img)
+                self.widget_list.append(self.ui_info_car)
+                self.layout_search.scrollAreaWidgetContents.layout().addWidget(self.ui_info_car)
+                
+                print(plate_, color_, brand_, in_time, out_time, img_path_)
+                if count == 1000:
+                    break
+                
 
     def slot_cancel(self):
         self.layout_search.hide()
@@ -52,9 +81,9 @@ class MainWindow(Ui_MainWindow):
         self.map_2d.show()
 
     def slot_search(self):
-        plates = self.database.get_plate_list()
-        colors = self.database.get_color_list()
-        brands = self.database.get_brand_list()
+        plates = list(set(self.database.get_plate_list()))
+        colors = list(set(self.database.get_color_list()))
+        brands = list(set(self.database.get_brand_list()))
         print(plates, colors, brands)
 
         completer_plate = QtWidgets.QCompleter(plates, self)
@@ -69,7 +98,7 @@ class MainWindow(Ui_MainWindow):
         self.layout_search.txt_brand.setCompleter(completer_brand)
 
         self.layout_search.hide()
-        self.layout_search.move(200, 300)
+        self.layout_search.move(200, 100)
         self.layout_search.show()
 
     def slot_car_info_from_lp(self, car_info):

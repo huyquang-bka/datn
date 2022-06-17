@@ -25,7 +25,7 @@ class Ui_MainWindow(QMainWindow):
         self.setupUi()
         self.camera_items_dict = {1: D5_Camera_Item(), 2: D3_Camera_Item(), 3: LP_Camera_Item()}
         self.grid_layout_cameras_dict = {}
-        for k in [3]:
+        for k in []:
             self.grid_layout_cameras_dict[k] = QtWidgets.QGridLayout()
             self.grid_layout_cameras_dict[k].setContentsMargins(0, 0, 0, 0)
             self.grid_layout_cameras_dict[k].addWidget(self.camera_items_dict[k], 0, 0, 1, 1)
@@ -40,6 +40,7 @@ class Ui_MainWindow(QMainWindow):
                 QtGui.QImage(rgb_img.data, rgb_img.shape[1], rgb_img.shape[0], QtGui.QImage.Format_RGB888)).scaled(
                 frame_camera.width(), frame_camera.height())
             frame_camera.setPixmap(qt_img)
+            frame_camera.setScaledContents(True)
 
     def setupUi(self):
         self.setObjectName("MainWindow")

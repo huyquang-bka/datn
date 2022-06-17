@@ -47,7 +47,6 @@ class Database():
             id, plate, color, brand, in_time, out_time, img_path = column
             result_dict[id] = {'plate': plate, 'color': color, 'brand': brand, 'in_time': in_time, 'out_time': out_time,
                                'img_path': img_path}
-            break
         return result_dict
 
     def insert_to_db(self, dictionary):
