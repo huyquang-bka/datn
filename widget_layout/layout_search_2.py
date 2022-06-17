@@ -17,7 +17,7 @@ class Ui_Layout_Search(QtWidgets.QWidget):
 
     def setupUi(self):
         self.setObjectName("Seach")
-        self.resize(500, 500)
+        self.resize(1000, 500)
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.gridLayout.setObjectName("gridLayout")
         self.groupBox = QtWidgets.QGroupBox(self)
