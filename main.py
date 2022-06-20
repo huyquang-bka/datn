@@ -6,6 +6,7 @@ from PyQt5.QtCore import pyqtSignal
 from widget_layout.map_2d import Ui_map2D
 from widget_layout.layout_search_3 import Ui_Layout_Search
 from widget_layout.layout_info_car import Ui_Info_Car
+from widget_layout.layout_info_table import Ui_Info_Table
 from Database.utils import Database
 from PyQt5 import QtWidgets
 from PyQt5 import QtCore
@@ -19,9 +20,11 @@ class MainWindow(Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.map_2d = Ui_map2D()
+        self.layout_info_table = Ui_Info_Table()
         self.layout_search = Ui_Layout_Search()
 
         self.btn_view_2d_map.clicked.connect(self.slot_view_2d_map)
+        self.btn_info_table.clicked.connect(self.slot_info_table)
         self.btn_search.clicked.connect(self.slot_search)
 
         self.layout_search.btn_apply.clicked.connect(self.slot_apply)
@@ -103,7 +106,13 @@ class MainWindow(Ui_MainWindow):
 
     def slot_car_info_from_lp(self, car_info):
         print(car_info)
-
+        
+    def slot_info_table(self):
+        self.layout_info_table.hide()
+        self.layout_info_table.db_to_df()
+        self.layout_info_table.show_table()
+        self.layout_info_table.move(500, 0)
+        self.layout_info_table.show()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

@@ -79,9 +79,9 @@ class Ui_MainWindow(QMainWindow):
         self.line.setFrameShadow(QtWidgets.QLabel.Sunken)
         self.line.setObjectName("line")
         self.layout_menu.addWidget(self.line, 3, 0, 1, 1)
-        self.btn_config = QtWidgets.QPushButton(self.menu)
-        self.btn_config.setObjectName("btn_config")
-        self.layout_menu.addWidget(self.btn_config, 1, 0, 1, 1)
+        self.btn_info_table = QtWidgets.QPushButton(self.menu)
+        self.btn_info_table.setObjectName("btn_info_table")
+        self.layout_menu.addWidget(self.btn_info_table, 1, 0, 1, 1)
         self.line_2 = QtWidgets.QLabel(self.menu)
         self.line_2.setFrameShape(QtWidgets.QLabel.HLine)
         self.line_2.setFrameShadow(QtWidgets.QLabel.Sunken)
@@ -100,7 +100,7 @@ class Ui_MainWindow(QMainWindow):
         _translate = QtCore.QCoreApplication.translate
         self.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.btn_search.setText(_translate("MainWindow", "Search"))
-        self.btn_config.setText(_translate("MainWindow", "View Information"))
+        self.btn_info_table.setText(_translate("MainWindow", "View Information"))
         self.btn_view_2d_map.setText(_translate("MainWindow", "View 2D map"))
 
 
