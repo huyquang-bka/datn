@@ -25,7 +25,7 @@ class Ui_MainWindow(QMainWindow):
         self.setupUi()
         self.camera_items_dict = {1: D5_Camera_Item(), 2: D3_Camera_Item(), 3: LP_Camera_Item()}
         self.grid_layout_cameras_dict = {}
-        for k in []:
+        for k in [2, 3]:
             self.grid_layout_cameras_dict[k] = QtWidgets.QGridLayout()
             self.grid_layout_cameras_dict[k].setContentsMargins(0, 0, 0, 0)
             self.grid_layout_cameras_dict[k].addWidget(self.camera_items_dict[k], 0, 0, 1, 1)
@@ -35,7 +35,6 @@ class Ui_MainWindow(QMainWindow):
     def show_frame(self, frame_camera, current_frame):
         if current_frame is not None:
             rgb_img = cv2.cvtColor(current_frame, cv2.COLOR_BGR2RGB)
-            # rgb_img = self.img.copy()
             qt_img = QPixmap.fromImage(
                 QtGui.QImage(rgb_img.data, rgb_img.shape[1], rgb_img.shape[0], QtGui.QImage.Format_RGB888)).scaled(
                 frame_camera.width(), frame_camera.height())

@@ -41,7 +41,7 @@ class ProcessLP_LPThread(QtCore.QThread, Detection):
                 if id == 'image':
                     continue
                 x1, y1, x2, y2, category = id_dict[id]
-                is_in_detect_zone = cv2.pointPolygonTest(detect_zone, ((x1 + x2) // 2, y2), False)
+                is_in_detect_zone = cv2.pointPolygonTest(detect_zone, (x1 // 2, y2), False)
                 if is_in_detect_zone < 1:
                     continue
                 # cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)

@@ -30,10 +30,10 @@ class MainWindow(Ui_MainWindow):
         self.layout_search.btn_apply.clicked.connect(self.slot_apply)
         self.layout_search.btn_cancel.clicked.connect(self.slot_cancel)
 
-        self.camera_items_dict[3].process_digit.sig_car_info.connect(self.slot_car_info_from_lp)
+        self.camera_items_dict[3].process_digit.sig_car_info.connect(self.camera_items_dict[2].slot_lp_from_lp)
 
         self.database = Database()
-        
+
         self.widget_list = []
 
         self.show()
@@ -56,24 +56,23 @@ class MainWindow(Ui_MainWindow):
                 in_time = result['in_time']
                 out_time = result['out_time']
                 img_path_ = result['img_path']
-                
+
                 self.ui_info_car = Ui_Info_Car()
                 self.ui_info_car.qlabel_plate.setText(plate_)
                 self.ui_info_car.qlabel_color.setText(color_)
                 self.ui_info_car.qlabel_brand.setText(brand_)
                 self.ui_info_car.qlabel_in_time.setText(in_time)
                 self.ui_info_car.qlabel_out_time.setText(out_time)
-                
+
                 img_path = img_path_
                 img = cv2.imread(img_path)
                 self.show_frame(self.ui_info_car.qlabel_frame, img)
                 self.widget_list.append(self.ui_info_car)
                 self.layout_search.scrollAreaWidgetContents.layout().addWidget(self.ui_info_car)
-                
+
                 print(plate_, color_, brand_, in_time, out_time, img_path_)
                 if count == 1000:
                     break
-                
 
     def slot_cancel(self):
         self.layout_search.hide()
@@ -106,13 +105,14 @@ class MainWindow(Ui_MainWindow):
 
     def slot_car_info_from_lp(self, car_info):
         print(car_info)
-        
+
     def slot_info_table(self):
         self.layout_info_table.hide()
         self.layout_info_table.db_to_df()
         self.layout_info_table.show_table()
         self.layout_info_table.move(500, 0)
         self.layout_info_table.show()
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

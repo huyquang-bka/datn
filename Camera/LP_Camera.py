@@ -24,7 +24,7 @@ class LP_Camera_Item(QtWidgets.QWidget):
 
     def __init__(self):
         super().__init__()
-        self.rtsp_url = r"D:\Lab IC\Data_9_3\Final_LP.mp4"
+        self.rtsp_url = r"D:\Cam_D35\Final\LP_truoc.mp4"
         self.camera_name = "LP_Camera"
 
         self.queue_capture = Queue()

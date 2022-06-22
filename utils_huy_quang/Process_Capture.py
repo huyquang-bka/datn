@@ -1,18 +1,8 @@
-import random
-import time
-# QT
 from PyQt5 import QtCore
 import os
+import cv2
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
-
-from PyQt5.QtCore import pyqtSignal
-
-import sys
-import os
-import numpy as np
-import cv2
-import time
 
 
 class ProcessCaptureThread(QtCore.QThread):
@@ -33,7 +23,7 @@ class ProcessCaptureThread(QtCore.QThread):
                 break
             if self.queue_capture.qsize() < 1:
                 self.queue_capture.put(frame)
-            QtCore.QThread.msleep(1)
+            QtCore.QThread.msleep(20)
 
     def stop(self):
         print('Stopping Processing Thread')

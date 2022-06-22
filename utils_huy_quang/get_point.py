@@ -15,7 +15,7 @@ def get_point(event, x, y, flags, param):
 
 # Create a window
 scale = 0.5
-cap = cv2.VideoCapture(r"D:\Cam_D35\2022-05-18\D3_part2.mp4")
+cap = cv2.VideoCapture(r"D:\Cam_D35\Final\D3_truoc_final.mp4")
 ret, image = cap.read()
 image = cv2.resize(image, dsize=None, fx=scale, fy=scale)
 # image = cv2.imread('test_TDN.png')

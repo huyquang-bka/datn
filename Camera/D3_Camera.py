@@ -24,7 +24,7 @@ class D3_Camera_Item(QtWidgets.QWidget):
 
     def __init__(self):
         super().__init__()
-        self.rtsp_url = r"D:\Cam_D35\2022-05-18\D3_part2.mp4"
+        self.rtsp_url = r"D:\Cam_D35\Final\D3_truoc_final.mp4"
         self.camera_name = "D3_Camera"
 
         self.queue_capture = Queue()
@@ -38,6 +38,10 @@ class D3_Camera_Item(QtWidgets.QWidget):
 
         self.setupUi()
         self.camera_frame.setSizePolicy(QtWidgets.QSizePolicy.Policy.Ignored, QtWidgets.QSizePolicy.Policy.Ignored)
+
+    def slot_lp_from_lp(self, car_info):
+        if self.queue_lp.qsize() < 1:
+            self.queue_lp.put(car_info)
 
     def start(self):
         self.process_capture.start()

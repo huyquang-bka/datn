@@ -1,10 +1,11 @@
 import sqlite3
 
-conn = sqlite3.connect('Database/huyquang.db')
+conn = sqlite3.connect('huyquang.db')
 c = conn.cursor()
 
-c.execute("select * from parking")
-datas = c.fetchall()
-for data in datas:
-    print(data)
+command = f"insert into parking values(100, '123', '123', '123', '123', '123', '123')"
 
+c.execute(command)
+# datas = c.fetchall()
+# for data in datas:
+#     print(data)
