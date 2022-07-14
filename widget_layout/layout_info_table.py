@@ -17,18 +17,18 @@ class Ui_Info_Table(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.setupUi()
-        
+
         self.query.textChanged.connect(self.slot_query)
         self.table.doubleClicked.connect(self.open_image)
-        
+
         self.db = 'Database\huyquang.db'
         # self.db_to_df()
         # self.show_table()
-    
+
     def db_to_df(self):
         self.conn = sqlite3.connect(self.db)
         self.df = pd.read_sql_query("SELECT * FROM parking", self.conn)
-    
+
     def show_table(self):
         df = self.df.drop(['id', "img_path"], axis=1)
         self.table.setRowCount(len(df))
@@ -42,20 +42,20 @@ class Ui_Info_Table(QtWidgets.QWidget):
         for i in range(len(df)):
             for j in range(len(df.columns)):
                 self.table.setItem(i, j, QtWidgets.QTableWidgetItem(str(df.iloc[i, j])))
-    
+
     def open_image(self, item):
         row = item.row()
         data = self.df.iloc[row]
         img_path = data[-1]
         print(img_path)
         self.show_image(img_path)
-    
+
     def show_image(self, img_path):
         img = QtGui.QImage(img_path)
         pixmap = QtGui.QPixmap.fromImage(img)
         self.qlabel_frame.setPixmap(pixmap)
         self.qlabel_frame.setScaledContents(True)
-    
+
     def setupUi(self):
         self.setObjectName("Table Info")
         self.resize(711, 441)
@@ -114,13 +114,15 @@ class Ui_Info_Table(QtWidgets.QWidget):
             s, QtCore.Qt.MatchContains | QtCore.Qt.MatchRecursive)
         rows = [item.row() for item in items]
         for i in range(self.table.rowCount()):
-            self.table.setRowHidden(i, not i in rows) 
-            
+            self.table.setRowHidden(i, not i in rows)
+
+
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     ui = Ui_Info_Table()
-    ui.db = "D:\Lab IC\datn\Database\huyquang.db"
+    ui.db = r"D:\datn_huy_quang\Database\huyquang.db"
     ui.db_to_df()
     ui.show_table()
     ui.show()

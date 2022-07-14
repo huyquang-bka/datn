@@ -54,6 +54,7 @@ class ProcessShowThread(QtCore.QThread, Detection):
                     self.id_lp[id] = self.last_lp
                     self.last_lp = ""
                 cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 255), 2)
+                cv2.putText(image, str(id), (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
                 if id in self.id_lp.keys():
                     cv2.putText(image, self.id_lp[id], (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
